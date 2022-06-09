@@ -15,12 +15,15 @@ def create_user(email, password):
 def create_movie(title, overview, release_date, poster_path):
     """Create and return a new movie."""
 
-    movie = Movie(title=title, overview=overview, release_date=release_date, poster_path=poster_path)
+    movie = Movie(title=title, overview=overview, release_date=release_date, poster_path=poster_path,)
 
     return movie   
     # return movie   "yyyy'-'MM'-'dd'T'HH':'mm':'ss'
     #"31-Oct-2015" format for string
 
+def get_all_movies():
+
+    return Movie.query.all()
 
 
 def create_rating(user, movie, score):
@@ -30,6 +33,11 @@ def create_rating(user, movie, score):
 
     return rating
 
+
+def get_movie_by_id(movie_id):
+    """Return a movie by movie_id"""
+
+    return Movie.query.get(movie_id)
 
 if __name__ == '__main__':
     from server import app

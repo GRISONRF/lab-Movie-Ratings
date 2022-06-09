@@ -24,7 +24,7 @@ class User(db.Model):
 class Movie(db.Model):
     """a movie."""
 
-    __tablename__ = 'movies'
+    __tablename__ = "movies"
 
     movie_id = db.Column(db.Integer,
                         autoincrement=True,
