@@ -34,6 +34,37 @@ def show_movie(movie_id):
 
     return render_template("movie_details.html", movie=movie)
 
+
+@app.route('/movies/<movie_id>/ratings', methods=["POST"])
+def create_rating(movie_id):
+    """Create a rating for a movie"""
+    # get id from session to check for login
+    # if not logged in some message about logging in
+    # get request from form for rating
+    # create rating and add and commit
+    
+    logged_in_email = session.get("user_email")
+    rating_score = request.form.get("rating")
+
+    if logged_in_email is None:
+        flash ("You must log in to rate a movie")
+    elif not rating_score:
+        flash ("You did not select a rating")
+    else:
+        user = crud.get_user_by_email(logged_in_email)
+        movie = crud.get_movie_by_id(movie_id)
+
+        rating = crud.create_rating(user, movie, int(rating_score))
+        db.session.add(rating)
+        db.session.commit()
+
+        flash (f'You rated this movie {rating_score} out of 5')
+    
+    return redirect(f"/movies/{movie_id}")
+
+
+
+
 @app.route('/users')
 def get_all_users():
     """View all users"""
@@ -56,24 +87,35 @@ def show_user(user_id):
 def register_user():
     """create a new user"""
 
-    email1 = request.form.get("email") #form email
+    email = request.form.get("email") #form email
     password = request.form.get("password")
-    # email1 - data
-    # email2 - form
-    user = crud.get_users()
+
+    user = crud.get_user_by_email(email)
     
-    # for item in crud.get_users: #<email="asdasdsa@" passowrd='asdasd>
-    if user.email == email1:
+    if user:
         flash(f'Cannot create an account with that e-mail') 
     else:
-        user = crud.create_user(email1, password)
+        user = crud.create_user(email, password)
         db.session.add(user)
         db.session.commit()
         flash('Account created please log in')
-        return redirect('/')
+    return redirect('/')
     
-    return render_template("user_details.html", item=item, user=user)
 
+@app.route('/login', methods=["POST"])
+def login_user():
+
+    email = request.form.get("email") #form email
+    password = request.form.get("password")
+
+    user = crud.get_user_by_email(email)
+
+    if user.password != password:
+        flash('email or password does not match')
+    else:
+        session["user_email"] = user.email
+        flash('Logged in')
+    return redirect('/')
 
 
 if __name__ == "__main__":

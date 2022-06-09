@@ -58,7 +58,9 @@ def create_rating(user, movie, score):
 
     return rating
 
+def all_ratings():
 
+    return Rating.query.all()
 
 
 if __name__ == '__main__':

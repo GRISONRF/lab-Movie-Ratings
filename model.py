@@ -21,6 +21,8 @@ class User(db.Model):
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
 
+
+
 class Movie(db.Model):
     """a movie."""
 
@@ -38,6 +40,8 @@ class Movie(db.Model):
 
     def __repr__(self):
         return f'<Movie movie_id={self.movie_id} title={self.title}>'
+
+
 
 class Rating(db.Model):
     """ratings."""
